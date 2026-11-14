@@ -467,5 +467,5 @@ npm run test:browser
 
 ## 👥 License & Acknowledgments
 
-Built with ⚡ for **Code Utsava X.0** by the **Turing Club of Programmers (TCP)**.  
+Built with ⚡ for **INNOV-A-THON** by the **E-CELL NIT ROURKELA**.  
 Released under the **MIT License**.
