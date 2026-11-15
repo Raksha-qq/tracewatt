@@ -108,6 +108,7 @@ export default function Simulation() {
     power_kw: "",
     meter_status: "",
     comm_status: "",
+    is_simulation: true,
   });
   const [mode, setMode] = useState("Stopped"),
     [interval, setIntervalValue] = useState(10),
@@ -124,9 +125,20 @@ export default function Simulation() {
         ...prev,
         ts: localTime(),
         ...scenario.values,
+        is_simulation: true,
       }));
     }
   }
+
+  // Pre-select first consumer when consumers list loads
+  useEffect(() => {
+    if (!form.consumer_id && consumers.data && consumers.data.length > 0) {
+      setForm((prev) => ({
+        ...prev,
+        consumer_id: consumers.data[0].consumer_id,
+      }));
+    }
+  }, [consumers.data, form.consumer_id]);
   const latest = useRef({ form, interval }),
     inflight = useRef(false),
     mounted = useRef(true),
@@ -154,6 +166,7 @@ export default function Simulation() {
       if (mounted.current) {
         setResult({ ack, payload, at: new Date().toLocaleTimeString() });
         setPulse((v) => v + 1);
+        setForm((prev) => ({ ...prev, ts: localTime() }));
       }
       window.dispatchEvent(new Event("tracewatt-case-updated"));
       window.dispatchEvent(new Event("tracewatt-alert-updated"));
@@ -186,7 +199,8 @@ export default function Simulation() {
       if (!cancelled && running.current)
         timer = setTimeout(tick, latest.current.interval * 1000);
     }
-    timer = setTimeout(tick, latest.current.interval * 1000);
+    // Transmit immediately upon start, then schedule at interval
+    tick();
     function hide() {
       if (document.hidden) {
         running.current = false;
@@ -331,7 +345,16 @@ export default function Simulation() {
                 </button>
               </div>
               <label>
-                Timestamp (local time → UTC)
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span>Timestamp (local time → UTC)</span>
+                  <button
+                    type="button"
+                    style={{ padding: "0.15rem 0.5rem", fontSize: "0.75rem", background: "transparent", border: "1px solid var(--border-color, #444)", borderRadius: "4px", color: "inherit", cursor: "pointer" }}
+                    onClick={() => setForm((prev) => ({ ...prev, ts: localTime() }))}
+                  >
+                    Set to Now ⟳
+                  </button>
+                </div>
                 <input
                   name="ts"
                   type="datetime-local"

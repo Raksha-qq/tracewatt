@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from ..schemas import ReadingIn, ReadingAck
-from ..db import insert_reading, SessionLocal
+from ..db import insert_reading, resolve_consumer_id, SessionLocal
 from ..models import Consumer
 from ..services.pipeline import queue_reading
 
@@ -15,10 +15,12 @@ def get_db():
 
 @router.post("/readings", response_model=ReadingAck)
 async def create_reading(reading: ReadingIn, db=Depends(get_db)):
+    resolved_id = resolve_consumer_id(db, reading.consumer_id)
     # Check if consumer exists
-    consumer = db.query(Consumer).filter(Consumer.id == reading.consumer_id).first()
+    consumer = db.query(Consumer).filter(Consumer.id == resolved_id).first()
     if not consumer:
         raise HTTPException(status_code=404, detail="Unknown consumer")
+    reading.consumer_id = resolved_id
     
     try:
         # Try inserting reading (duplicate check is in db.insert_reading)

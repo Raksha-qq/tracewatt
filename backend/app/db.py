@@ -524,6 +524,15 @@ def insert_reading(reading) -> bool:
             Reading.ts == ts_val
         ).first()
         if exists:
+            if getattr(reading, "is_simulation", False):
+                exists.kwh = reading.kwh
+                exists.voltage = reading.voltage
+                exists.current = reading.current
+                exists.power_kw = reading.power_kw
+                exists.meter_status = reading.meter_status
+                exists.comm_status = reading.comm_status
+                db.commit()
+                return True
             return False
             
         new_reading = Reading(

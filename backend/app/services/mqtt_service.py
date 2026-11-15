@@ -95,6 +95,15 @@ class MQTTService:
             logger.info(f"[MQTT Ingest] Topic: {msg.topic} | Payload: {payload_str}")
 
             if "consumer_id" in payload and "ts" in payload:
+                # Normalize consumer id
+                from ..db import resolve_consumer_id, SessionLocal
+                raw_cid = str(payload["consumer_id"])
+                _s = SessionLocal()
+                try:
+                    cid = resolve_consumer_id(_s, raw_cid)
+                finally:
+                    _s.close()
+
                 # Normalize timestamp
                 ts_val = payload["ts"]
                 if isinstance(ts_val, str):
@@ -108,7 +117,7 @@ class MQTTService:
                     ts_dt = datetime.utcnow()
 
                 reading_in = ReadingIn(
-                    consumer_id=str(payload["consumer_id"]),
+                    consumer_id=cid,
                     ts=ts_dt,
                     kwh=float(payload["kwh"]) if payload.get("kwh") is not None else None,
                     voltage=float(payload["voltage"]) if payload.get("voltage") is not None else 230.0,
@@ -116,6 +125,7 @@ class MQTTService:
                     power_kw=float(payload["power_kw"]) if payload.get("power_kw") is not None else 0.0,
                     meter_status=str(payload.get("meter_status", "OK")),
                     comm_status=str(payload.get("comm_status", "OK")),
+                    is_simulation=bool(payload.get("is_simulation", True)),
                 )
 
                 # Persist in storage
