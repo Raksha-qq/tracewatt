@@ -62,6 +62,7 @@ def generate_meter_reading(consumer_id: str, scenario: str = "normal") -> dict:
         "power_kw": power_kw,
         "meter_status": meter_status,
         "comm_status": comm_status,
+        "is_simulation": True,
     }
 
 
@@ -85,7 +86,7 @@ def main():
     client.loop_start()
     time.sleep(1)
 
-    meter_ids = [f"CONS_{i:04d}" for i in range(1, args.num_meters + 1)]
+    meter_ids = [f"CUS_{i:03d}" for i in range(args.num_meters)]
     # Designate some meters for scenarios
     theft_meter = meter_ids[0] if len(meter_ids) > 0 else None
     malfunc_meter = meter_ids[1] if len(meter_ids) > 1 else None

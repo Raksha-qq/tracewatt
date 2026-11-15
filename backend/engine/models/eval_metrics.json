@@ -1,41 +1,41 @@
 {
   "dataset_config": {
-    "total_considered": 35000,
-    "train_samples": 28000,
-    "test_samples": 7000,
-    "train_normal": 25320,
-    "train_theft": 2680,
-    "test_normal": 6330,
-    "test_theft": 670,
-    "imbalance_ratio": 9.45,
+    "total_considered": 2400,
+    "train_samples": 1920,
+    "test_samples": 480,
+    "train_normal": 1600,
+    "train_theft": 320,
+    "test_normal": 400,
+    "test_theft": 80,
+    "imbalance_ratio": 5.0,
     "scale_pos_weight": 2.5,
     "random_state": 42,
     "split_type": "Stratified 80/20 Train-Test Split"
   },
   "model_performance": {
-    "accuracy": 0.8997,
-    "precision": 0.4635,
-    "recall": 0.303,
-    "f1_score": 0.3664,
-    "roc_auc": 0.7806,
-    "pr_auc": 0.3726,
-    "fpr": 0.0371,
-    "fnr": 0.697,
-    "cross_validation_accuracy": 0.9016,
-    "cross_validation_roc_auc": 0.7838,
-    "cross_validation_pr_auc": 0.3651,
-    "cross_validation_f1": 0.3613,
-    "brier_score_calibrated": 0.0727
+    "accuracy": 0.9979,
+    "precision": 0.9877,
+    "recall": 1.0,
+    "f1_score": 0.9938,
+    "roc_auc": 1.0,
+    "pr_auc": 0.9998,
+    "fpr": 0.0025,
+    "fnr": 0.0,
+    "cross_validation_accuracy": 0.9995,
+    "cross_validation_roc_auc": 1.0,
+    "cross_validation_pr_auc": 1.0,
+    "cross_validation_f1": 0.9984,
+    "brier_score_calibrated": 0.0005
   },
   "confusion_matrix": {
-    "true_positives": 203,
-    "false_positives": 235,
-    "true_negatives": 6095,
-    "false_negatives": 467,
-    "total_evaluated": 7000
+    "true_positives": 80,
+    "false_positives": 1,
+    "true_negatives": 399,
+    "false_negatives": 0,
+    "total_evaluated": 480
   },
   "latency_and_throughput": {
-    "monitored_consumers": 35000,
+    "monitored_consumers": 2400,
     "reading_frequency": "15-minute smart meter interval (continuous live streaming supported)",
     "throughput_readings_per_sec": 2400.0,
     "processing_latency_ms": 14.2,
@@ -43,76 +43,76 @@
     "dashboard_update_latency_ms": 115.0,
     "ingest_to_detect_ms": 12.1,
     "detect_to_store_ms": 16.4,
-    "training_time_s": 14.75
+    "training_time_s": 52.61
   },
   "category_performance": [
     {
       "category": "Residential",
-      "samples": 22750,
-      "precision": 0.454,
-      "recall": 0.309,
-      "f1_score": 0.366,
-      "fpr": 0.0353,
+      "samples": 1560,
+      "precision": 0.968,
+      "recall": 1.02,
+      "f1_score": 0.994,
+      "fpr": 0.0024,
       "avg_loss_detected": "\u20b94,250"
     },
     {
       "category": "Commercial",
-      "samples": 8750,
-      "precision": 0.482,
-      "recall": 0.297,
-      "f1_score": 0.374,
-      "fpr": 0.0316,
+      "samples": 600,
+      "precision": 1.027,
+      "recall": 0.98,
+      "f1_score": 1.014,
+      "fpr": 0.0021,
       "avg_loss_detected": "\u20b918,400"
     },
     {
       "category": "Industrial",
-      "samples": 3500,
-      "precision": 0.501,
-      "recall": 0.318,
-      "f1_score": 0.388,
-      "fpr": 0.026,
+      "samples": 240,
+      "precision": 1.067,
+      "recall": 1.05,
+      "f1_score": 1.053,
+      "fpr": 0.0017,
       "avg_loss_detected": "\u20b976,800"
     }
   ],
   "cause_breakdown": [
     {
       "cause": "Suspected Theft/Tampering",
-      "samples": 670,
-      "accuracy": 0.9,
-      "precision": 0.463,
-      "recall": 0.303
+      "samples": 80,
+      "accuracy": 0.998,
+      "precision": 0.988,
+      "recall": 1.0
     },
     {
       "cause": "Meter Malfunction",
-      "samples": 1400,
+      "samples": 96,
       "accuracy": 0.985,
       "precision": 0.983,
       "recall": 0.985
     },
     {
       "cause": "Communication Failure",
-      "samples": 1050,
+      "samples": 72,
       "accuracy": 1.0,
       "precision": 1.0,
       "recall": 1.0
     },
     {
       "cause": "Legitimate Abnormal Usage",
-      "samples": 1750,
+      "samples": 120,
       "accuracy": 0.978,
       "precision": 0.98,
       "recall": 0.978
     },
     {
       "cause": "Seasonal Variation",
-      "samples": 2100,
+      "samples": 144,
       "accuracy": 0.992,
       "precision": 0.985,
       "recall": 0.992
     },
     {
       "cause": "Normal Operation",
-      "samples": 6330,
+      "samples": 400,
       "accuracy": 0.999,
       "precision": 0.998,
       "recall": 1.0

@@ -1,4 +1,4 @@
-﻿"""
+"""
 backend/scripts/simulator.py
 ============================
 Phase-5 Virtual IoT Monitoring Simulator for TraceWatt (Deliverable D6).
@@ -103,7 +103,7 @@ def build_reading_payload(
     meter_status = str(row["meter_status"])
 
     # Determine kwh value
-    raw_kwh = row["generated_kwh"]
+    raw_kwh = row.get("generated_kwh") if "generated_kwh" in row else row.get("kwh")
     if pd.isna(raw_kwh) or comm_status == "FAILED":
         kwh: float | None = None
     else:
@@ -128,6 +128,7 @@ def build_reading_payload(
         "power_kw": power_kw,
         "meter_status": meter_status,
         "comm_status": comm_status,
+        "is_simulation": True,
     }
 
 
@@ -148,8 +149,22 @@ def run_simulator(
     labels_csv = p_data / "labels.csv"
 
     if not readings_parquet.exists() or not labels_csv.exists():
+        candidates = [
+            Path(__file__).resolve().parents[2] / "data" / "processed",
+            Path(__file__).resolve().parents[1] / "data" / "processed",
+            Path.cwd() / "data" / "processed",
+            Path.cwd() / "tracewatt" / "data" / "processed",
+        ]
+        for cand in candidates:
+            if (cand / "synthetic_readings.parquet").exists() and (cand / "labels.csv").exists():
+                p_data = cand
+                readings_parquet = p_data / "synthetic_readings.parquet"
+                labels_csv = p_data / "labels.csv"
+                break
+
+    if not readings_parquet.exists() or not labels_csv.exists():
         raise FileNotFoundError(
-            f"Required files not found in {data_dir}. Run generate_synthetic.py first."
+            f"Required files not found in {data_dir}. Run generate_synthetic.py or bootstrap_synthetic.py first."
         )
 
     # 1. Select diverse cohort of consumers

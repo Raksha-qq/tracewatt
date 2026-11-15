@@ -83,6 +83,20 @@ def _load_models() -> None:
     feat_path  = _MODEL_DIR / "feature_cols.json"
 
     if not lgbm_path.exists():
+        try:
+            from .train import train_and_save
+            data_candidates = [
+                _MODEL_DIR.parents[1] / "data" / "processed",
+                _MODEL_DIR.parents[2] / "data" / "processed",
+            ]
+            for dc in data_candidates:
+                if (dc / "features.parquet").exists():
+                    train_and_save(data_dir=str(dc), model_dir=str(_MODEL_DIR))
+                    break
+        except Exception:
+            pass
+
+    if not lgbm_path.exists():
         raise FileNotFoundError(
             f"Model not found at {lgbm_path}. Run `python engine/train.py` first."
         )
